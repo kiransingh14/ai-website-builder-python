@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preview: {{ website.website_title }} - AI SiteBuilder</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body class="preview-layout">
+    <header class="preview-toolbar">
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <a href="{% url 'dashboard' %}" class="btn btn-secondary btn-sm">
+                ← Dashboard
+            </a>
+            <div>
+                <strong style="font-size: 1rem; color: var(--text-primary);">{{ website.website_title }}</strong>
+                <span style="font-size: 0.8rem; color: var(--text-muted); margin-left: 8px;">({{ website.business.type }})</span>
+            </div>
+        </div>
+
+        <div class="device-toggles">
+            <button class="device-btn active" onclick="setViewport('desktop', this)">
+                💻 Desktop
+            </button>
+            <button class="device-btn" onclick="setViewport('tablet', this)">
+                📱 Tablet
+            </button>
+            <button class="device-btn" onclick="setViewport('mobile', this)">
+                📱 Mobile
+            </button>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <a href="{% url 'raw_website' website.id %}" target="_blank" class="btn btn-secondary btn-sm" title="Open full screen in a new tab">
+                ↗️ New Tab
+            </a>
+            <a href="{% url 'download_website' website.id %}" class="btn btn-primary btn-sm">
+                💾 Download HTML
+            </a>
+        </div>
+    </header>
+
+    <div class="preview-frame-container">
+        <iframe id="previewIframe" class="preview-iframe" src="{% url 'raw_website' website.id %}" title="Website Preview"></iframe>
+    </div>
+
+    <script>
+        function setViewport(device, btn) {
+            const iframe = document.getElementById('previewIframe');
+            document.querySelectorAll('.device-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            iframe.className = 'preview-iframe ' + (device === 'desktop' ? '' : device);
+        }
+    </script>
+</body>
+</html>

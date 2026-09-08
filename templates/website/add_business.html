@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}Create New AI Website - AI SiteBuilder{% endblock %}
+
+{% block content %}
+<div class="form-page-container">
+    <div style="margin-bottom: 24px;">
+        <a href="{% url 'dashboard' %}" style="color: var(--text-secondary); font-size: 0.9rem; display: inline-flex; align-items: center; gap: 6px;">
+            ← Back to Dashboard
+        </a>
+    </div>
+
+    <div class="card-panel">
+        <div style="text-align: center; margin-bottom: 28px;">
+            <div style="font-size: 2.2rem; margin-bottom: 8px;">✨</div>
+            <h1 style="font-size: 1.75rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 6px;">
+                Generate a New Website
+            </h1>
+            <p style="color: var(--text-secondary); font-size: 0.95rem;">
+                Provide your business details and let Gemini AI create a tailored, modern website for you.
+            </p>
+        </div>
+
+        <form id="generateForm" method="post" action="{% url 'add_business' %}">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label class="form-label" for="id_name">Business Name</label>
+                {{ form.name }}
+                {% if form.name.errors %}
+                    <div class="form-error">{{ form.name.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="id_type">Business Type / Industry</label>
+                {{ form.type }}
+                {% if form.type.errors %}
+                    <div class="form-error">{{ form.type.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="id_description">Business Description & Key Highlights</label>
+                {{ form.description }}
+                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 6px;">
+                    💡 Tip: Include target audience, services offered, key benefits, and brand tone (e.g. luxurious, energetic, friendly).
+                </div>
+                {% if form.description.errors %}
+                    <div class="form-error">{{ form.description.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <button type="submit" id="submitBtn" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 16px;">
+                <span>🚀 Generate Website with AI</span>
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Loading overlay during generation -->
+<div id="generatingOverlay" class="generating-overlay">
+    <div class="spinner"></div>
+    <div style="text-align: center;">
+        <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 8px;">Generating Your Website...</h2>
+        <p style="color: var(--text-secondary); max-width: 360px;">
+            Gemini AI is crafting your copy, styling your sections, and building your responsive HTML page.
+        </p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    const form = document.getElementById('generateForm');
+    const overlay = document.getElementById('generatingOverlay');
+    const submitBtn = document.getElementById('submitBtn');
+
+    form.addEventListener('submit', function() {
+        overlay.style.display = 'flex';
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span>⚡ Processing...</span>';
+    });
+</script>
+{% endblock %}
